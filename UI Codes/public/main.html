@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <base href="http://localhost:3000/">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biopin Dashboard</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+
+<body>
+     <!-- Logo -->
+    <div class="container text-center mt-4">
+        <header class="mb-1">
+            <img src="icons/biopin_logo2.png" alt="Biopin Logo" class="img-fluid logo-img" draggable="false">
+        </header>
+
+         <!-- 5 Buttons -->
+        <div class="button-grid">
+            <div class="button-row">
+                <button class="btn btn-primary btn-block custom-button" onclick="redirectToPage('/direction')">
+                    <div class="button-content">
+                        <img src="icons/direction.png" alt="Direction" class="img-fluid">
+                        <span>Direction</span>
+                    </div>
+                </button>
+
+                <button class="btn btn-primary btn-block custom-button" onclick="redirectToPage('/speed')">
+                    <div class="button-content">
+                        <img src="icons/power.png" alt="Speed" class="img-fluid">
+                        <span>Speed</span>
+                    </div>
+                </button>
+            </div>
+
+            <div class="button-row">
+                <button class="btn btn-primary btn-block custom-button" onclick="redirectToPage('/eeg')">
+                    <div class="button-content">
+                        <img src="icons/eeg.png" alt="EEG Signals" class="img-fluid">
+                        <span>EEG Signals</span>
+                    </div>
+                </button>
+
+                <button class="btn btn-primary btn-block custom-button last-button" onclick="redirectToPage('/help')">
+                    <div class="button-content">
+                        <img src="icons/help.png" alt="About" class="img-fluid">
+                        <span>Help</span>
+                    </div>
+                </button>
+            </div>
+
+
+           <!-- <div class="button-row">
+                <button class="btn btn-primary btn-block custom-button last-button" onclick="redirectToPage('/help')">
+                    <div class="button-content">
+                        <img src="icons/help.png" alt="About" class="img-fluid">
+                        <span>Help</span>
+                    </div>
+                </button>
+            </div> -->
+        </div>
+    </div>
+          
+
+    <!-- Toast -->
+    <div class="toast" id="headgearToast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header text-secondary-emphasis">
+            <strong class="mx-auto">Headgear Status</strong>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="toast-body text-center" id="toastBody">
+            <!-- Toast content  -->
+        </div>
+    </div>
+
+    <!-- Including Bootstrap JS and Popper.js -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Checking headgear status -->
+    <script>
+        //Button onclick action
+        function redirectToPage(page) {
+            window.location.href = page;
+        }
+    
+        function checkHeadgearStatus() {
+        fetch('bluetooth.json')
+            .then(response => response.json())
+            .then(data => {
+                const headgearStatus = data.headgearStatus;
+                const toastBody = document.getElementById('toastBody');
+                const buttons = document.getElementsByTagName('button');
+
+                if (headgearStatus === 1 && !toastBody.classList.contains('connected')) {
+                    toastBody.innerText = 'Headgear connected.';
+                    document.getElementById('headgearToast').classList.add('show');
+                    toastBody.classList.add('connected');
+
+                    for (var i = 0; i < buttons.length; i++) {
+                        buttons[i].disabled = false;
+                    }
+
+                    // Close the toast automatically after 3 seconds
+                    setTimeout(function () {
+                        document.getElementById('headgearToast').classList.remove('show');
+                    }, 3000);
+                } else if (headgearStatus === 0) {
+                    toastBody.innerText = 'Headgear not connected. \n Please check connection.';
+                    document.getElementById('headgearToast').classList.add('show');
+                    toastBody.classList.remove('connected');
+
+                    // Do not close the toast until the headgear becomes connected
+                    for (var i = 0; i < buttons.length; i++) {
+                        buttons[i].disabled = true;
+                    }
+                }
+            })
+            .catch(error => console.error('Error reading JSON file:', error))
+            .finally(() => {
+                // Continue checking for updates
+                setTimeout(function () {
+                    checkHeadgearStatus();
+                }, 1000);
+            });
+    }
+
+    checkHeadgearStatus();
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,8 @@
+/* DIRECTION.HTML STYLE */
+body {
+    user-select: none;
+}
+
+.container {
+    max-width: 70%;
+}

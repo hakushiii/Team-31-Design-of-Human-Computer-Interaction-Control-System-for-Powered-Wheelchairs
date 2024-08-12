@@ -1,0 +1,98 @@
+/* MAIN.HTML STYLE */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #343a40;
+    user-select: none;
+}
+
+header {
+    text-align: center;
+    padding: 15px;
+    background-color: #333;
+    color: #fff;
+}
+
+.logo-img {
+    max-width: 100%;
+    height: auto;
+    width: 65px;
+    height: 65px;
+}
+
+.button-grid {
+    text-align: center;
+    margin: 15px;
+}
+
+.button-row {
+    margin-bottom: 12px;
+}
+
+.button-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Center both vertically and horizontally */
+}
+
+.custom-button {
+    width: 170px; /* Set a fixed width for the buttons */
+    height: 64px; /* Set a fixed height for the buttons */
+    margin: 2px 5px;
+    padding: 8px;
+    text-align: center;
+    background-color: #3498db;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 550;
+    border: none;
+    cursor: pointer;
+}
+
+.button-content img {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 2px;
+}
+
+.btn:active,
+.btn:focus {
+    box-shadow: none;
+}
+
+@media screen and (max-width: 600px) {
+    .button-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+header {
+    background-color: #343a40;
+    color: white;
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.toast {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 100%;
+    width: auto;
+}
+
+@media screen and (max-width: 600px) {
+    .toast {
+        max-width: 90%;
+    }
+}
+
+.toast-header .close {
+display: none; /* Hide the close button */
+}
+

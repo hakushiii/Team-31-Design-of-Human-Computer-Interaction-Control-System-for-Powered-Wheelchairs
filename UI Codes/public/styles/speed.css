@@ -1,0 +1,76 @@
+/* SPEED.HTML STYLE */
+body {
+    user-select: none;
+}
+
+.custom-container {
+    width: 80%; /* Adjust the percentage for the width of the container */
+    }
+
+
+.custom-num {
+    margin: 1em;
+    color: #1b1c23;
+    display: flex;
+    width: 3em;
+    height: 7em;
+    border: 2px #1b1c23 solid;
+    border-width: thin;
+    border-radius: 3em;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+    transition: 0.3s;
+}
+
+.num-input::-webkit-inner-spin-button,
+.num-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0; 
+}
+
+.num-input {
+    font-size: 1.5em;
+    text-align: center;
+    background: none;
+    border: none;
+    color: rgb(58, 175, 214);
+    font-weight: bold;
+    width: 100%;
+    pointer-events: none;
+}
+
+.num-input:focus {
+    outline: none;
+}
+
+.custom-num i {
+    font-size: 2em;
+    cursor: pointer;
+}
+
+.custom-btn {
+    margin-top: 1px;
+    background-color: rgb(58, 175, 214);
+    color: #fff;
+    border: none;
+    padding: 2.5px 7px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 1px;
+}
+
+.toast {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 80%;
+    width: auto;
+}
+
+@media screen and (max-width: 600px) {
+    .toast {
+        max-width: 90%;
+    }
+}

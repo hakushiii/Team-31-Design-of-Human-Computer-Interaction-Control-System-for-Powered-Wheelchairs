@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motor Speed</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles/speed.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+
+    <!-- Adding navbar.js -->
+    <script src="navbar.js"></script>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body class="bg-light">       
+       
+    <script>    
+    // Call the createNavbar() function to generate the navbar
+        createNavbar();
+    </script>
+
+    <!-- Speed Card -->
+    <div class="d-flex align-items-center justify-content-center">
+        <div class="container custom-container border border-dark-subtle rounded text-center p-2 mt-3 mb-2 m-3">
+            <h1 style="font-size: 1.2rem;">Set Motor Speed</h1>
+            <h1 style="font-size: .7rem;">Speed must be in the range of 1 to 100</h1>
+            <div class="container-fluid mt-2 d-flex justify-content-center align-items-center ">
+                <div class="custom-num">
+                    <i class="fas fa-angle-up arr-up"></i>
+                    <input
+                        type="number"
+                        class="num-input"
+                        min="0"
+                        max="2"
+                        value="0"
+                        data-color="#21d99b"
+                    />
+                    <i class="fas fa-angle-down arr-down"></i>  
+                </div>
+
+                <div class="custom-num">
+                    <i class="fas fa-angle-up arr-up"></i>
+                    <input
+                        type="number"
+                        class="num-input"
+                        min="0"
+                        max="9"
+                        value="5"
+                        data-color="#21d99b"
+                    />
+                    <i class="fas fa-angle-down arr-down"></i>  
+                </div>
+
+                <div class="custom-num">
+                    <i class="fas fa-angle-up arr-up"></i>
+                    <input
+                        type="number"
+                        class="num-input"
+                        min="0"
+                        max="9"
+                        value="0"
+                        data-color="#21d99b"
+                    />
+                    <i class="fas fa-angle-down arr-down"></i>  
+                </div>
+            </div>
+            <button class="custom-btn" id="saveSettingsBtn">Save Settings</button>
+        </div>
+    </div>  
+        
+        <!-- Toast -->
+        <div id="speedToast" class="toast position-fixed top-50 start-50 translate-middle" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header text-secondary-emphasis">
+                <strong class="me-auto">Motor Speed</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close" id="closeButton"></button>
+            </div>
+            <div class="toast-body" id="toastBody">
+                <!-- Toast content  -->
+            </div>
+        </div>
+        
+    <script>
+        // Fetch data from JSON file to show the current speed value
+        fetch('data.json')
+            .then(response => response.json())
+            .then(data => {
+                const combinedValues = data.combinedValues;
+
+            // Update input values with the extracted digits
+                customNum.forEach((num, index) => {
+                    const numInput = num.querySelector('.num-input');
+                    const digit = parseInt(combinedValues[index]); // Convert the string digit to an integer
+                    numInput.value = isNaN(digit) ? 0 : digit; // Set the input value, default to 0 if it's not a valid digit
+                });
+            })
+        .catch(error => {
+            console.error('Error fetching data from JSON file:', error);
+        });
+
+        const customNum = document.querySelectorAll('.custom-num');
+        const saveSettingsBtn = document.getElementById('saveSettingsBtn');
+
+
+        customNum.forEach((num, index) => {
+            const numInput = num.querySelector('.num-input');
+            const arrUp = num.querySelector('.arr-up');
+            const arrDown = num.querySelector('.arr-down');
+
+            arrUp.addEventListener('click', () => {
+                numInput.stepUp();
+                checkMaxMin(num, numInput);
+            });
+
+            arrDown.addEventListener('click', () => {
+                numInput.stepDown();
+                checkMaxMin(num, numInput);
+            });
+
+            numInput.addEventListener('input', () => {
+                checkMaxMin(num, numInput);
+                saveToLocalStorage(index + 1, numInput.value);
+            });
+
+            function checkMaxMin(num, numInput) {
+                const numInputValue = parseInt(numInput.value);
+                const numInputMax = parseInt(numInput.max);
+                const numInputMin = parseInt(numInput.min);
+
+                if (numInputValue === numInputMax) {
+                    num.style.paddingTop = "0.8em";
+                    num.style.height = "5em";
+                    arrUp.style.display = "none";
+                    num.style.paddingBottom = "0";
+                    arrDown.style.display = "block";
+                } else if (numInputValue === numInputMin) {
+                    num.style.paddingBottom = "0.8em";
+                    num.style.height = "5em";
+                    arrDown.style.display = "none";
+                    num.style.paddingTop = "0";
+                    arrUp.style.display = "block";
+                } else {
+                    num.style.padding = "0";
+                    num.style.height = "7em";
+                    arrUp.style.display = "block";
+                    arrDown.style.display = "block";
+                }
+            }
+        });
+
+        // Save settings button onclick action
+        saveSettingsBtn.addEventListener('click', () => {
+        let combinedValues = '';
+        customNum.forEach((num, index) => {
+            const numInput = num.querySelector('.num-input');
+            combinedValues += numInput.value;
+        });
+
+        if (parseInt(combinedValues) > 100 || parseInt(combinedValues) < 1) {
+            // Show the error toast
+            toastBody.innerText = 'Speed must be in the range of 1 to 100.';
+            closeButton.style.display = 'block'; // Show the close button
+            document.getElementById('speedToast').classList.add('show');
+        } else {
+            console.log('Combined values:', combinedValues);
+
+            // Send combinedValues to the server
+            fetch('http://localhost:3000/saveData', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ combinedValues }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Server response:', data);
+                })
+                .catch(error => {
+                    console.error('Error sending data to server:', error);
+                });
+            
+            // Show the successful toast
+            toastBody.innerText = 'Speed has been updated.';
+            closeButton.style.display = 'none'; // Hide the close button
+            document.getElementById('speedToast').classList.add('show');
+
+            // Hide the toast after 2 seconds
+            setTimeout(() => {
+                document.getElementById('speedToast').classList.remove('show');
+            }, 1500);
+        }
+    });
+
+        // Show toast message content
+        function showToast(message) {
+            const toast = new bootstrap.Toast(document.querySelector('.toast'), {
+                animation: true
+            });
+            document.getElementById('toastMessage').innerText = message;
+            toast.show();
+        }
+    </script>
+
+</body>
+</html>

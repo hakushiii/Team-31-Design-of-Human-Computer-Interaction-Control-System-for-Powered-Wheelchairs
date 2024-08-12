@@ -1,0 +1,16 @@
+/* HELP.HTML STYLE */
+body {
+    user-select: none;
+}
+
+.instruction-container {
+  border: 1px solid #adb5bd;
+  padding: 15px;
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+.custom-width {
+  width: 85%; 
+  margin: auto; 
+}
